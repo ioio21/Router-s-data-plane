@@ -1,0 +1,51 @@
+#Tudor_Ioana_Octavia_321CA
+Router Implementation
+    This homework implements all the necessary steps that a router has to
+make in order to transport a packet from Host X to Host Y. The router has
+to both send and receive ARP Requests, ARP Replies and IPv4 packets.
+
+Implementation Details
+    All functions required for ARP and IPv4 packet handling have been
+implemented, except for an efficient binary search, which has been replaced
+by a linear search. To perform its tasks, the router must allocate memory for
+its RouteTable and ARP Cache Table. Additionally, it allocates memory for two
+queue structures used to hold multiple packets, and for an array that helps
+in traversing the queues.
+    In order to parse the RouteTable, a route_table_entry struct has been used.
+Furthermore, the ArpCache Table is dynamically parsed, meaning that whenever a
+new connection is made, the table updates itself.
+    The entire process happens in a while loop.
+
+ARP and IPv4 Packet Handling
+    The first step is to extract the Ethernet header from the package. This
+header will indicate if the following header is an ARP header or an IPv4 header.
+
+Receiving an ARP Request
+    The router checks if the packet is for the router; otherwise, it is
+dropped. If the packet is for the router, the router sends back an ARP Reply
+by building all the necessary headers and using the SEND ARP function.
+
+Receiving an ARP Reply
+    The router updates its cache for the router. It then traverses all packets
+from the packet queue and sees which packets should be transferred to the
+entity that sent the reply. If the packet's next hop is similar to the source
+IP of the reply, then the packet is sent. Otherwise, it has to be inserted
+back into the queue using an extra auxiliary structure.
+
+Receiving an IPv4 Packet
+    The router checks if the packet is for the router and if it is an ICMP
+ECHO Request, meaning that the router should send an ICMP ECHO REPLY MESSAGE.
+If it is not for the router, there is a series of checks that have to be done
+in order to send the packet forward:
+- Check the checksum, and if it is wrong, drop the packet.
+- Check the TTL, and if it is wrong, send an ICMP error message and drop the
+packet.
+- Check if the next hop is an existing one, and if not, send an ICMP
+destination unreachable error message and drop the packet.
+
+    If all the tests have been passed, then the router should check if it
+knows the MAC address of the next hop. If the next hop is not saved in cache,
+the router sends an ARP Request to obtain the MAC address associated with the
+next hop. To build an ARP Request, all the headers have to be built again
+using the send_arp_request function. If it was in the cache, then the entry
+is sent forward normally.
