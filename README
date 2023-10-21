@@ -1,4 +1,3 @@
-#Tudor_Ioana_Octavia_321CA
 Router Implementation
     This homework implements all the necessary steps that a router has to
 make in order to transport a packet from Host X to Host Y. The router has
